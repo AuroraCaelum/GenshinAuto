@@ -4,11 +4,11 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "31.0.0"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "arca.dev.genshinauto"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"

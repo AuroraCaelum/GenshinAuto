@@ -17,16 +17,19 @@
             android:id="@+id/manual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn1"/>
+            android:text="@string/btn1"
+            android:onClick="manual"/>
         <Button
             android:id="@+id/hoyolabopen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn2"/>
+            android:text="@string/btn2"
+            android:onClick="hoyolabOpen"/>
         <Button
             android:id="@+id/manualtoken"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn3"/>
+            android:text="@string/btn3"
+            android:onClick="manualToken"/>
     </LinearLayout>
 </RelativeLayout>
