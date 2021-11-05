@@ -77,11 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
         OkHttpClient okHttpClient = new OkHttpClient();
         RequestBody body = new FormBody.Builder()
-                .add("act_id", "e202102251931481")
-                .add("lang", "ko-kr")
                 .build();
         Request request = new Request.Builder()
-                .url("https://hk4e-api-os.mihoyo.com/event/sol/sign")
+                .url("https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&lang=ko-kr")
                 .addHeader("Cookie","ltuid=" + ltuid + ";ltoken=" + ltoken + ";")
                 .post(body)
                 .build();
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String finalResponse = response.toString();
+                String finalResponse = response.body().string();
                 Log.d("dev", "manual: " + finalResponse);
             }
         });
