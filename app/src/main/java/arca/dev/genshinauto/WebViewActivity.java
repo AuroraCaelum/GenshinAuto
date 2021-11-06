@@ -31,23 +31,14 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     public void initWebView(){
-        /*if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-
-        }*/
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webView, true);
         WebSettings webSettings = webView.getSettings();
-        //webSettings.setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36");
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        //webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        //webSettings.setDatabaseEnabled(true);
-        //webView.setWebViewClient(new WebViewClient());
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
-        //webView.setNetworkAvailable(true);
         webView.loadUrl("https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&lang=ko-kr");
 
     }
@@ -62,27 +53,33 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     public void autoToken (View v){
-        String cookieRaw = CookieManager.getInstance().getCookie("https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&lang=ko-kr") + ";";
-        Log.d("dev", "autoToken: " + cookieRaw);
-        Toast.makeText(this, cookieRaw, Toast.LENGTH_LONG).show();
+        try {
+            String cookieRaw = CookieManager.getInstance().getCookie("https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&lang=ko-kr") + ";";
 
-        String ltoken_target = "ltoken=";
-        String ltuid_target = "ltuid=";
-        int ltoken_t_num = cookieRaw.indexOf(ltoken_target);
-        int ltuid_t_num = cookieRaw.indexOf(ltuid_target);
-        String ltoken = cookieRaw.substring(ltoken_t_num+7,(cookieRaw.substring(ltoken_t_num).indexOf(";")+ltoken_t_num));
-        String ltuid = cookieRaw.substring(ltuid_t_num+6,(cookieRaw.substring(ltuid_t_num).indexOf(";")+ltuid_t_num));
+            String ltoken_target = "ltoken=";
+            String ltuid_target = "ltuid=";
+            int ltoken_t_num = cookieRaw.indexOf(ltoken_target);
+            int ltuid_t_num = cookieRaw.indexOf(ltuid_target);
+            String ltoken = cookieRaw.substring(ltoken_t_num+7,(cookieRaw.substring(ltoken_t_num).indexOf(";")+ltoken_t_num));
+            String ltuid = cookieRaw.substring(ltuid_t_num+6,(cookieRaw.substring(ltuid_t_num).indexOf(";")+ltuid_t_num));
 
-        Log.d("dev", "autoToken: " + ltoken);
-        Log.d("dev", "autoToken: " + ltuid);
+            Log.d("dev", "autoToken: " + ltoken);
+            Log.d("dev", "autoToken: " + ltuid);
 
-        pref = getSharedPreferences("pref", MODE_PRIVATE);
-        editor = pref.edit();
+            pref = getSharedPreferences("pref", MODE_PRIVATE);
+            editor = pref.edit();
 
-        editor.putBoolean("firstRun", false);
-        editor.putString("ltoken", ltoken);
-        editor.putString("ltuid", ltuid);
-        editor.apply();
+            editor.putBoolean("firstRun", false);
+            editor.putString("ltoken", ltoken);
+            editor.putString("ltuid", ltuid);
+            editor.apply();
+
+            Toast.makeText(this, "토큰이 정상적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+            finish();
+        } catch (StringIndexOutOfBoundsException e){
+            Toast.makeText(this, "유효한 토큰이 발견되지 않았습니다.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

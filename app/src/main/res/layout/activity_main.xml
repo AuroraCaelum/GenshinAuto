@@ -20,16 +20,22 @@
             android:text="@string/btn1"
             android:onClick="manual"/>
         <Button
-            android:id="@+id/hoyolabopen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn2"
-            android:onClick="hoyolabOpen"/>
-        <Button
             android:id="@+id/manualtoken"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn3"
             android:onClick="manualToken"/>
+
+        <Switch
+            android:id="@+id/serviceSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/service" />
+        <Switch
+            android:id="@+id/pushSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/push" />
     </LinearLayout>
 </RelativeLayout>

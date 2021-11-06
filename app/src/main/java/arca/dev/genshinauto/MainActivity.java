@@ -12,8 +12,13 @@ import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +40,7 @@ import okhttp3.ResponseBody;
 public class MainActivity extends AppCompatActivity {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("수동 등록", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            //TODO 등록 웹뷰 띄우기
+
                             dialogInterface.dismiss();
                         }
                     })
@@ -68,10 +74,95 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("firstRun", "N");
         }
+
+        Boolean serviceStatus = pref.getBoolean("serviceStatus", false);
+        Boolean pushStatus = pref.getBoolean("pushStatus", false);
+        Switch serviceSw = findViewById(R.id.serviceSwitch);
+        Switch pushSw = findViewById(R.id.pushSwitch);
+        serviceSw.setChecked(serviceStatus);
+        pushSw.setChecked(pushStatus);
+
+        serviceSw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    //알람매니저 실행
+                    editor.putBoolean("serviceStatus", true);
+                    editor.apply();
+                } else {
+                    //알람매니저 해제
+                    editor.putBoolean("serviceStatus", false);
+                    editor.apply();
+                }
+            }
+        });
+
+
+        pushSw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    //푸시 켜기
+                    editor.putBoolean("pushStatus", true);
+                    editor.apply();
+                } else {
+                    //푸시 끄기
+                    editor.putBoolean("pushStatus", false);
+                    editor.apply();
+                }
+            }
+        });
     }
 
     public void manual (View v) throws IOException {
         //TODO 등록된 정ㅇ보 있나 확인부터
+        request();
+    }
+
+    /*public void hoyolabOpen (View v){
+
+    }*/
+
+    public void manualToken (View v){
+        String formalUid = pref.getString("ltuid","");
+        String formalToken = pref.getString("ltoken","");
+        final EditText editUid = new EditText(this);
+        editUid.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editUid.setText(formalUid);
+        editUid.setHint("ltuid");
+        final EditText editToken = new EditText(this);
+        editToken.setInputType(InputType.TYPE_CLASS_TEXT);
+        editToken.setText(formalToken);
+        editToken.setHint("ltoken");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("UID 변경")
+                .setMessage("변경할 UID를 입력해주세요.")
+                .setView(editUid)
+                .setPositiveButton("변경", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        editor.putString("ltuid", editUid.getText().toString());
+                        editor.apply();
+                        dialogInterface.dismiss();
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(MainActivity.this);
+                        builder2.setTitle("토큰 변경")
+                                .setMessage("변경할 토큰을 입력해주세요.")
+                                .setView(editToken)
+                                .setPositiveButton("변경", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        editor.putString("ltoken", editToken.getText().toString());
+                                        editor.apply();
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                        builder2.show();
+                    }
+                });
+        builder.show();
+    }
+
+    public void request() throws IOException{
         String ltuid = pref.getString("ltuid", "");
         String ltoken = pref.getString("ltoken", "");
 
@@ -91,46 +182,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String finalResponse = response.body().string();
-                Log.d("dev", "manual: " + finalResponse);
+                new Handler(getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+                            JSONObject json = new JSONObject(response.body().string());
+                            Toast.makeText(MainActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e){
+                            e.printStackTrace();
+                        } catch (IOException e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         });
-
-
-        //String act_id = RetrofitService.act_id;
-        //String lang = RetrofitService.lang;
-        /*Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RetrofitService.url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        RetrofitService retrofitService = retrofit.create(RetrofitService.class);
-        HashMap<String, Object> input = new HashMap<>();
-        //input.put("act_id", act_id);
-        //input.put("lang", lang);
-        input.put("ltuid", ltuid);
-        input.put("ltoken", ltoken);
-        retrofitService.postData(input).enqueue(new Callback<Data>(){
-            @Override
-            public void onResponse(@NonNull Call<Data> call, @NonNull Response<Data> response){
-                if (response.isSuccessful()){
-                    Data body = response.body();
-                    if (body!=null){
-                        Log.d("getMessage", body.getMessage());
-                    }
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<Data> call, @NonNull Throwable t){
-
-            }
-        });*/
-    }
-
-    public void hoyolabOpen (View v){
-
-    }
-
-    public void manualToken (View v){
-
     }
 }

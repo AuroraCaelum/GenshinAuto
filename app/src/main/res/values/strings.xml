@@ -3,6 +3,8 @@
     <string name="btn1">Manual Check</string>
     <string name="btn2">HoyoLab Page Open</string>
     <string name="btn3">Manual Token Input</string>
+    <string name="push">Enable Push</string>
+    <string name="service">Enable Service</string>
 
     <string name="token_autoget">Get Token</string>
 </resources>
