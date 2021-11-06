@@ -4,6 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +29,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -40,6 +48,8 @@ import okhttp3.ResponseBody;
 public class MainActivity extends AppCompatActivity {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
+    public static AlarmManager alarmManager = null;
+    public static PendingIntent sender = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +59,11 @@ public class MainActivity extends AppCompatActivity {
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         editor = pref.edit();
 
+        //TODO 업데이트 체크기능
+
         boolean checkFirstRun = pref.getBoolean("firstRun", true);
 
-        if (checkFirstRun){
+        if (checkFirstRun) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("토큰 등록")
                     .setMessage("호요랩 로그인을 통해 자동 등록 하시거나, 직접 토큰을 입력해주세요.")
@@ -85,8 +97,21 @@ public class MainActivity extends AppCompatActivity {
         serviceSw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     //알람매니저 실행
+                    alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                    Intent intent = new Intent(getApplicationContext(), Schedule.class);
+                    sender = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+
+
+                        //Date time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-11-06 15:41:00");
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(System.currentTimeMillis());
+                        calendar.set(Calendar.MINUTE, 51);
+                        calendar.set(Calendar.SECOND, 0);
+                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60 * 1000, sender);
+                        Log.d("DEV", "onCheckedChanged: success");
+
                     editor.putBoolean("serviceStatus", true);
                     editor.apply();
                 } else {
@@ -101,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         pushSw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     //푸시 켜기
                     editor.putBoolean("pushStatus", true);
                     editor.apply();
@@ -114,18 +139,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void manual (View v) throws IOException {
+    public void manual(View v) throws IOException {
         //TODO 등록된 정ㅇ보 있나 확인부터
         request();
+        //Intent intent = new Intent(getApplicationContext(), Schedule.class);
+        //startActivity(intent);
     }
 
     /*public void hoyolabOpen (View v){
 
     }*/
 
-    public void manualToken (View v){
-        String formalUid = pref.getString("ltuid","");
-        String formalToken = pref.getString("ltoken","");
+    public void manualToken(View v) {
+        String formalUid = pref.getString("ltuid", "");
+        String formalToken = pref.getString("ltoken", "");
         final EditText editUid = new EditText(this);
         editUid.setInputType(InputType.TYPE_CLASS_NUMBER);
         editUid.setText(formalUid);
@@ -162,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void request() throws IOException{
+    public void request() throws IOException {
         String ltuid = pref.getString("ltuid", "");
         String ltoken = pref.getString("ltoken", "");
 
@@ -171,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         Request request = new Request.Builder()
                 .url("https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&lang=ko-kr")
-                .addHeader("Cookie","ltuid=" + ltuid + ";ltoken=" + ltoken + ";")
+                .addHeader("Cookie", "ltuid=" + ltuid + ";ltoken=" + ltoken + ";")
                 .post(body)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -185,12 +212,12 @@ public class MainActivity extends AppCompatActivity {
                 new Handler(getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        try{
+                        try {
                             JSONObject json = new JSONObject(response.body().string());
                             Toast.makeText(MainActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
-                        } catch (IOException e){
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
