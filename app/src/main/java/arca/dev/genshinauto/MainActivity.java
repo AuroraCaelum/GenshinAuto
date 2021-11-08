@@ -3,14 +3,20 @@ package arca.dev.genshinauto;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -35,6 +41,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.TimeZone;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -46,10 +53,13 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String NOTI_CHANNEL = "12321";
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     public static AlarmManager alarmManager = null;
     public static PendingIntent sender = null;
+    //final NotificationManager notificationManager;
+    //final Notification.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Boolean serviceStatus = pref.getBoolean("serviceStatus", false);
-        Boolean pushStatus = pref.getBoolean("pushStatus", false);
+        Boolean pushStatus = pref.getBoolean("pushStatus", true);
         Switch serviceSw = findViewById(R.id.serviceSwitch);
         Switch pushSw = findViewById(R.id.pushSwitch);
         serviceSw.setChecked(serviceStatus);
@@ -101,21 +111,31 @@ public class MainActivity extends AppCompatActivity {
                     //알람매니저 실행
                     alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(getApplicationContext(), Schedule.class);
-                    sender = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+                    sender = PendingIntent.getBroadcast(getApplicationContext(), 12321, intent, 0);
 
 
-                        //Date time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-11-06 15:41:00");
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(System.currentTimeMillis());
-                        calendar.set(Calendar.MINUTE, 51);
-                        calendar.set(Calendar.SECOND, 0);
-                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60 * 1000, sender);
-                        Log.d("DEV", "onCheckedChanged: success");
+                    Calendar calendar = Calendar.getInstance(); //Asia/Seoul
+                    calendar.setTimeInMillis(System.currentTimeMillis());
+                    calendar.set(Calendar.HOUR_OF_DAY, 1); //1
+                    calendar.set(Calendar.MINUTE, 5); //10 BootReceiver에도 똑같이
+                    calendar.set(Calendar.SECOND, 0);
+                    alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
+                    Log.d("DEV", "onCheckedChanged: success");
 
                     editor.putBoolean("serviceStatus", true);
                     editor.apply();
                 } else {
                     //알람매니저 해제
+                    if (sender!=null){
+                        alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                        Intent intent = new Intent(getApplicationContext(), Schedule.class);
+                        sender = PendingIntent.getBroadcast(getApplicationContext(),12321, intent, 0);
+                        alarmManager.cancel(sender);
+                        sender.cancel();
+                        alarmManager = null;
+                        sender = null;
+                        Log.d("DEV", "onCheckedChanged: canceled" );
+                    }
                     editor.putBoolean("serviceStatus", false);
                     editor.apply();
                 }
@@ -214,7 +234,15 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             JSONObject json = new JSONObject(response.body().string());
-                            Toast.makeText(MainActivity.this, json.getString("message"), Toast.LENGTH_SHORT).show();
+                            String msg = json.getString("message");
+                            Boolean pushStatus = pref.getBoolean("pushStatus", true);
+                            if (pushStatus){
+                                if (msg.equals("OK")){
+                                    msg = "출석체크 완료!";
+                                    //Toast.makeText(MainActivity.this, "출석체크 완료!", Toast.LENGTH_SHORT).show();
+                                }
+                                pushSender(msg);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -224,5 +252,42 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    public void pushSender(String msg){
+        Log.d("DEV", "pushSender: start");
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTI_CHANNEL);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground))
+                .setTicker(msg)
+                .setWhen(System.currentTimeMillis())
+                .setNumber(1)
+                .setContentTitle("원신 자동출첵")
+                .setContentText(msg)
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            builder.setSmallIcon(R.drawable.ic_launcher_background);
+            CharSequence channelName = "GENSHIN NOTIFICATION CHANNEL";
+            String description = "OREO Compat";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel channel = new NotificationChannel(NOTI_CHANNEL, channelName, importance);
+            channel.setDescription(description);
+
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(channel);
+        } else builder.setSmallIcon(R.mipmap.ic_launcher);
+        assert notificationManager != null;
+        notificationManager.notify(12321, builder.build());
     }
 }
