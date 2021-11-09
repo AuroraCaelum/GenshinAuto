@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GenshinAuto</string>
     <string name="version" translatable="false">1.0.1</string>
+    <string name="hoyolab_url">https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&amp;lang=en-us</string>
     <string name="btn1">Manual Check</string>
     <string name="btn2">HoyoLab Page Open</string>
     <string name="btn3">Manual Token Input</string>
@@ -8,4 +9,29 @@
     <string name="service">Enable Service</string>
 
     <string name="token_autoget">Get Token</string>
+
+    <string name="title_token_reg">Register Token Value</string>
+    <string name="dialog_token_reg">Automatically register with HoyoLab Login, or input manually.</string>
+    <string name="toast_manual">Click [Manual Token Input] button to input values</string>
+    <string name="input_manual">Manual Input</string>
+    <string name="input_auto">Auto Input</string>
+
+    <string name="service_started">Service Started</string>
+    <string name="service_stopped">Service Stopped</string>
+    <string name="push_enabled">Push Enabled</string>
+    <string name="push_disabled">Push Disabled</string>
+
+    <string name="input">Input</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="input_uid">Input UID</string>
+    <string name="input_uid_dialog">Input ltuid value.</string>
+    <string name="input_token">Input Token</string>
+    <string name="input_token_dialog">Input ltoken value.</string>
+
+    <string name="update">Update Alert</string>
+    <string name="update_dialog">New version is available. Update now?</string>
+    <string name="update_pos">Update Now</string>
+
+    <string name="checkin_complete">Check-In Completed!</string>
 </resources>

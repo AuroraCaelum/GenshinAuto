@@ -72,59 +72,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //앱 내부 설정 저장소 등록
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         editor = pref.edit();
 
+        //앱 업데이트 확인
         checkUpdate();
 
+        //최초 실행 시 토큰 등록
         boolean checkFirstRun = pref.getBoolean("firstRun", true);
-
         if (checkFirstRun) {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setTitle("토큰 등록")
-                    .setMessage("호요랩 로그인을 통해 자동 등록 하시거나, 직접 토큰을 입력해주세요.")
+            builder.setTitle(getString(R.string.title_token_reg))
+                    .setMessage(getString(R.string.dialog_token_reg))
                     .setCancelable(false)
-                    .setPositiveButton("수동 등록", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.input_manual), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(MainActivity.this, getString(R.string.toast_manual), Toast.LENGTH_SHORT).show();
                             dialogInterface.dismiss();
-                            //manualToken();
-                            //수동 토큰 등록용 Dialog 표시
-                            /*final EditText manualUid = new EditText(getApplicationContext());
-                            manualUid.setInputType(InputType.TYPE_CLASS_NUMBER);
-                            manualUid.setHint("ltuid");
-                            final EditText manualToken = new EditText(getApplicationContext());
-                            manualToken.setInputType(InputType.TYPE_CLASS_TEXT);
-                            manualToken.setHint("ltoken");
-                            AlertDialog.Builder builder_ltuid = new AlertDialog.Builder(getApplicationContext());
-                            builder_ltuid.setTitle("UID 입력")
-                                    .setMessage("ltuid 값을 입력해주세요.")
-                                    .setView(manualUid)
-                                    .setPositiveButton("입력", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            editor.putString("ltuid", manualUid.getText().toString());
-                                            editor.apply();
-                                            dialogInterface.dismiss();
-                                            AlertDialog.Builder builder_ltoken = new AlertDialog.Builder(MainActivity.this);
-                                            builder_ltoken.setTitle("토큰 입력")
-                                                    .setMessage("ltoken 값을 입력해주세요.")
-                                                    .setView(manualUid)
-                                                    .setPositiveButton("입력", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                                            editor.putString("ltoken", manualToken.getText().toString());
-                                                            editor.apply();
-                                                            dialogInterface.dismiss();
-                                                        }
-                                                    });
-                                            builder_ltoken.show();
-                                        }
-                                    });
-                            builder_ltuid.show();*/
                         }
                     })
-                    .setNegativeButton("자동 등록", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.input_auto), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
@@ -136,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("firstRun", "N");
         }
 
+        //서비스 상태 버튼 초기화
         Boolean serviceStatus = pref.getBoolean("serviceStatus", false);
         Boolean pushStatus = pref.getBoolean("pushStatus", true);
         Switch serviceSw = findViewById(R.id.serviceSwitch);
@@ -143,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         serviceSw.setChecked(serviceStatus);
         pushSw.setChecked(pushStatus);
 
+        //자동출첵 서비스 버튼 토글
         serviceSw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -155,12 +126,12 @@ public class MainActivity extends AppCompatActivity {
 
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC")); //Asia/Seoul
                     calendar.setTimeInMillis(System.currentTimeMillis());
-                    calendar.set(Calendar.HOUR_OF_DAY, 0); //1
-                    calendar.set(Calendar.MINUTE, 0); //10 BootReceiver에도 똑같이
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE, 0);
                     calendar.set(Calendar.SECOND, 30);
                     alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
                     Log.d("DEV", "onCheckedChanged: success");
-                    Toast.makeText(MainActivity.this, "서비스 작동 성공", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.service_started), Toast.LENGTH_SHORT).show();
 
                     editor.putBoolean("serviceStatus", true);
                     editor.apply();
@@ -175,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                         alarmManager = null;
                         sender = null;
                         Log.d("DEV", "onCheckedChanged: canceled" );
-                        Toast.makeText(MainActivity.this, "서비스 작동 중지", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.service_stopped, Toast.LENGTH_SHORT).show();
                     }
                     editor.putBoolean("serviceStatus", false);
                     editor.apply();
@@ -183,18 +154,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //푸시 알림 버튼 토글
         pushSw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     //푸시 켜기
-                    Toast.makeText(MainActivity.this, "푸시알림 받기", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.push_enabled), Toast.LENGTH_SHORT).show();
                     editor.putBoolean("pushStatus", true);
                     editor.apply();
                 } else {
                     //푸시 끄기
-                    Toast.makeText(MainActivity.this, "푸시알림 받지않기", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.push_disabled), Toast.LENGTH_SHORT).show();
                     editor.putBoolean("pushStatus", false);
                     editor.apply();
                 }
@@ -203,11 +174,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void manual(View v) throws IOException {
-        //TODO 등록된 정보 있나 확인부터
         request();
     }
 
     public void manualToken(View v) {
+        //토큰값 수동 입력
         String formalUid = pref.getString("ltuid", "");
         String formalToken = pref.getString("ltoken", "");
         final EditText editUid = new EditText(this);
@@ -219,34 +190,49 @@ public class MainActivity extends AppCompatActivity {
         editToken.setText(formalToken);
         editToken.setHint("ltoken");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("UID 변경")
-                .setMessage("변경할 UID를 입력해주세요.")
+        builder.setTitle(getString(R.string.input_uid))
+                .setMessage(getString(R.string.input_uid_dialog))
                 .setView(editUid)
-                .setPositiveButton("변경", new DialogInterface.OnClickListener() {
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.input), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         editor.putString("ltuid", editUid.getText().toString());
                         editor.apply();
                         dialogInterface.dismiss();
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(MainActivity.this);
-                        builder2.setTitle("토큰 변경")
-                                .setMessage("변경할 토큰을 입력해주세요.")
+                        builder2.setTitle(getString(R.string.input_token))
+                                .setMessage(getString(R.string.input_token_dialog))
                                 .setView(editToken)
-                                .setPositiveButton("변경", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(getString(R.string.input), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         editor.putString("ltoken", editToken.getText().toString());
+                                        editor.putBoolean("firstRun", false);
                                         editor.apply();
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
                                         dialogInterface.dismiss();
                                     }
                                 });
                         builder2.show();
+                    }
+                })
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
                     }
                 });
         builder.show();
     }
 
     public void request() throws IOException {
+        //수동 출석체크
         String ltuid = pref.getString("ltuid", "");
         String ltoken = pref.getString("ltoken", "");
 
@@ -254,10 +240,10 @@ public class MainActivity extends AppCompatActivity {
         RequestBody body = new FormBody.Builder()
                 .build();
         Request request = new Request.Builder()
-                .url("https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&lang=ko-kr")
-                .addHeader("Cookie", "ltuid=" + ltuid + ";ltoken=" + ltoken + ";")
+                .url(getString(R.string.hoyolab_url))
+                .addHeader("Cookie", "ltuid=" + ltuid + ";ltoken=" + ltoken + ";") //ltuid 값과 ltoken 값을 포함한 쿠키 헤더 생성
                 .post(body)
-                .build();
+                .build(); //호요랩 서버에 POST
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -271,12 +257,11 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             JSONObject json = new JSONObject(response.body().string());
-                            String msg = json.getString("message");
+                            String msg = json.getString("message"); //호요랩 응답 확인
                             Boolean pushStatus = pref.getBoolean("pushStatus", true);
                             if (pushStatus){
                                 if (msg.equals("OK")){
-                                    msg = "출석체크 완료!";
-                                    //Toast.makeText(MainActivity.this, "출석체크 완료!", Toast.LENGTH_SHORT).show();
+                                    msg = getString(R.string.checkin_complete);
                                 }
                                 pushSender(msg);
                             }
@@ -292,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void pushSender(String msg){
+        //응답 결과 푸시 전송
         Log.d("DEV", "pushSender: start");
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, MainActivity.class);
@@ -304,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
                 .setTicker(msg)
                 .setWhen(System.currentTimeMillis())
                 .setNumber(1)
-                .setContentTitle("원신 자동출첵")
+                .setContentTitle(getString(R.string.app_name))
                 .setContentText(msg)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setContentIntent(pendingIntent)
@@ -328,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUpdate(){
+        //앱 업데이트 확인, 앱을 직접 열 경우에만 작동
         Log.d("DEV", "checkUpdate: start");
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -356,10 +343,10 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             if (!currentVersion.equals(stringBuffer.toString())){
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                builder.setTitle("업데이트 알림")
-                                        .setMessage("신규 버전이 있습니다. 지금 업데이트 하시겠습니까?")
+                                builder.setTitle(getString(R.string.update))
+                                        .setMessage(getString(R.string.update_dialog))
                                         .setCancelable(true)
-                                        .setPositiveButton("지금 업데이트", new DialogInterface.OnClickListener() {
+                                        .setPositiveButton(getString(R.string.update_pos), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dev-by-david/GenshinAuto/releases"));
@@ -367,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
                                                 dialogInterface.dismiss();
                                             }
                                         })
-                                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 dialogInterface.dismiss();
