@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public static AlarmManager alarmManager = null;
     public static PendingIntent sender = null;
     String updateUrl = "https://raw.githubusercontent.com/dev-by-david/GenshinAuto/main/app/version.txt";
+    Handler handler = new Handler();
     //final NotificationManager notificationManager;
     //final Notification.Builder builder;
 
@@ -86,8 +87,41 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton("수동 등록", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                             dialogInterface.dismiss();
+                            //manualToken();
+                            //수동 토큰 등록용 Dialog 표시
+                            /*final EditText manualUid = new EditText(getApplicationContext());
+                            manualUid.setInputType(InputType.TYPE_CLASS_NUMBER);
+                            manualUid.setHint("ltuid");
+                            final EditText manualToken = new EditText(getApplicationContext());
+                            manualToken.setInputType(InputType.TYPE_CLASS_TEXT);
+                            manualToken.setHint("ltoken");
+                            AlertDialog.Builder builder_ltuid = new AlertDialog.Builder(getApplicationContext());
+                            builder_ltuid.setTitle("UID 입력")
+                                    .setMessage("ltuid 값을 입력해주세요.")
+                                    .setView(manualUid)
+                                    .setPositiveButton("입력", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            editor.putString("ltuid", manualUid.getText().toString());
+                                            editor.apply();
+                                            dialogInterface.dismiss();
+                                            AlertDialog.Builder builder_ltoken = new AlertDialog.Builder(MainActivity.this);
+                                            builder_ltoken.setTitle("토큰 입력")
+                                                    .setMessage("ltoken 값을 입력해주세요.")
+                                                    .setView(manualUid)
+                                                    .setPositiveButton("입력", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                                            editor.putString("ltoken", manualToken.getText().toString());
+                                                            editor.apply();
+                                                            dialogInterface.dismiss();
+                                                        }
+                                                    });
+                                            builder_ltoken.show();
+                                        }
+                                    });
+                            builder_ltuid.show();*/
                         }
                     })
                     .setNegativeButton("자동 등록", new DialogInterface.OnClickListener() {
@@ -126,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     calendar.set(Calendar.SECOND, 30);
                     alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
                     Log.d("DEV", "onCheckedChanged: success");
+                    Toast.makeText(MainActivity.this, "서비스 작동 성공", Toast.LENGTH_SHORT).show();
 
                     editor.putBoolean("serviceStatus", true);
                     editor.apply();
@@ -140,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
                         alarmManager = null;
                         sender = null;
                         Log.d("DEV", "onCheckedChanged: canceled" );
+                        Toast.makeText(MainActivity.this, "서비스 작동 중지", Toast.LENGTH_SHORT).show();
                     }
                     editor.putBoolean("serviceStatus", false);
                     editor.apply();
@@ -153,10 +189,12 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     //푸시 켜기
+                    Toast.makeText(MainActivity.this, "푸시알림 받기", Toast.LENGTH_SHORT).show();
                     editor.putBoolean("pushStatus", true);
                     editor.apply();
                 } else {
                     //푸시 끄기
+                    Toast.makeText(MainActivity.this, "푸시알림 받지않기", Toast.LENGTH_SHORT).show();
                     editor.putBoolean("pushStatus", false);
                     editor.apply();
                 }
@@ -165,15 +203,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void manual(View v) throws IOException {
-        //TODO 등록된 정ㅇ보 있나 확인부터
+        //TODO 등록된 정보 있나 확인부터
         request();
-        //Intent intent = new Intent(getApplicationContext(), Schedule.class);
-        //startActivity(intent);
     }
-
-    /*public void hoyolabOpen (View v){
-
-    }*/
 
     public void manualToken(View v) {
         String formalUid = pref.getString("ltuid", "");
@@ -296,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkUpdate(){
+        Log.d("DEV", "checkUpdate: start");
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -318,26 +351,32 @@ public class MainActivity extends AppCompatActivity {
                         conn.disconnect();
                     }
                     String currentVersion = getString(R.string.version);
-                    if (!currentVersion.equals(stringBuffer.toString())){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle("업데이트 알림")
-                                .setMessage("신규 버전이 있습니다. 지금 업데이트 하시겠습니까?")
-                                .setCancelable(true)
-                                .setPositiveButton("지금 업데이트", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dev-by-david/GenshinAuto/releases"));
-                                        dialogInterface.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                        builder.show();
-                    }
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!currentVersion.equals(stringBuffer.toString())){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                builder.setTitle("업데이트 알림")
+                                        .setMessage("신규 버전이 있습니다. 지금 업데이트 하시겠습니까?")
+                                        .setCancelable(true)
+                                        .setPositiveButton("지금 업데이트", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dev-by-david/GenshinAuto/releases"));
+                                                startActivity(intent);
+                                                dialogInterface.dismiss();
+                                            }
+                                        })
+                                        .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                            }
+                                        });
+                                builder.show();
+                            }
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
