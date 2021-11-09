@@ -1,4 +1,9 @@
-# GenshinAuto for Android
+- <a href="#korean" >한국어/Korean</a>
+- <a href="#english" >English/영어</a>  
+
+<div id="korean"></div>
+
+# GenshinAuto for Android 원신 자동출석체크
 - 호요랩 원신 출석체크를 자동으로 진행해주는 안드로이드 앱입니다.
 
 ## 사용법
@@ -25,3 +30,6 @@
 - [Schedule.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - 자동/수동 출석체크 관련 코드
 - [WebViewActivity.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - 토큰 자동등록 관련 코드
 - 전체 로직 보기 - [app/src/main/java/arca/dev/genshinauto](https://github.com/dev-by-david/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
+
+
+<div id="english"></div>
