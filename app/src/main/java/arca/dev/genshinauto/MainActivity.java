@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     public static AlarmManager alarmManager = null;
     public static PendingIntent sender = null;
+    String updateUrl = "";
     //final NotificationManager notificationManager;
     //final Notification.Builder builder;
 
@@ -114,11 +115,11 @@ public class MainActivity extends AppCompatActivity {
                     sender = PendingIntent.getBroadcast(getApplicationContext(), 12321, intent, 0);
 
 
-                    Calendar calendar = Calendar.getInstance(); //Asia/Seoul
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC")); //Asia/Seoul
                     calendar.setTimeInMillis(System.currentTimeMillis());
-                    calendar.set(Calendar.HOUR_OF_DAY, 1); //1
-                    calendar.set(Calendar.MINUTE, 5); //10 BootReceiver에도 똑같이
-                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.HOUR_OF_DAY, 0); //1
+                    calendar.set(Calendar.MINUTE, 0); //10 BootReceiver에도 똑같이
+                    calendar.set(Calendar.SECOND, 30);
                     alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
                     Log.d("DEV", "onCheckedChanged: success");
 
@@ -272,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-                .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){

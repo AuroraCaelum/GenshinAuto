@@ -32,11 +32,11 @@ public class BootReceiver extends BroadcastReceiver {
 
                 //Date time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-11-06 15:41:00");
                 //Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC"), Locale.CHINA);
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC"));
                 calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(Calendar.HOUR_OF_DAY, 1);
-                calendar.set(Calendar.MINUTE, 5);
-                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 30);
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
                 Log.d("DEV", "onCheckedChanged: success");
             }

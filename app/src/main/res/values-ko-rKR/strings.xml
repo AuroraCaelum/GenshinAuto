@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GenshinAuto</string>
-    <string name="btn1">수동출첵</string>
+    <string name="app_name">원신 자동출석체크</string>
+    <string name="btn1">수동 출석체크</string>
     <string name="btn2">출첵페이지 연결</string>
     <string name="btn3">토큰 수동 입력</string>
     <string name="token_autoget">토큰 가져오기</string>
