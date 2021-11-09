@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,11 +31,14 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     public static AlarmManager alarmManager = null;
     public static PendingIntent sender = null;
-    String updateUrl = "";
+    String updateUrl = "https://raw.githubusercontent.com/dev-by-david/GenshinAuto/main/app/version.txt";
     //final NotificationManager notificationManager;
     //final Notification.Builder builder;
 
@@ -70,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         editor = pref.edit();
 
-        //TODO 업데이트 체크기능
+        checkUpdate();
 
         boolean checkFirstRun = pref.getBoolean("firstRun", true);
 
@@ -289,5 +293,56 @@ public class MainActivity extends AppCompatActivity {
         } else builder.setSmallIcon(R.mipmap.ic_launcher);
         assert notificationManager != null;
         notificationManager.notify(12321, builder.build());
+    }
+
+    void checkUpdate(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final StringBuffer stringBuffer = new StringBuffer();
+                try {
+                    URL url = new URL(updateUrl);
+                    HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+                    if (conn!=null){
+                        conn.setConnectTimeout(5000);
+                        conn.setUseCaches(false);
+                        if (conn.getResponseCode()==HttpURLConnection.HTTP_OK){
+                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+                            while (true){
+                                String line = bufferedReader.readLine();
+                                if (line == null) break;
+                                stringBuffer.append(line);
+                            }
+                            bufferedReader.close();
+                        }
+                        conn.disconnect();
+                    }
+                    String currentVersion = getString(R.string.version);
+                    if (!currentVersion.equals(stringBuffer.toString())){
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("업데이트 알림")
+                                .setMessage("신규 버전이 있습니다. 지금 업데이트 하시겠습니까?")
+                                .setCancelable(true)
+                                .setPositiveButton("지금 업데이트", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dev-by-david/GenshinAuto/releases"));
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                        builder.show();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 }
