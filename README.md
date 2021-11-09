@@ -18,3 +18,7 @@ Not logged in (토큰 오류로 로그인에 실패 한 경우)
 ## 민감한 정보 이용
 - 이 앱은 사용자의 개인정보 (토큰, UID 등)을 호요랩 이외 외부 서버로 전달하지 않습니다.
 - 토큰과 UID를 이용한 모든 작업은 클라이언트(사용자의 기기)에서만 이루어집니다.
+
+### 토큰 데이터 처리 코드
+- [Schedule.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - 자동/수동 출석체크 관련 코드
+- [WebViewActivity.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - 토큰 자동등록 관련 코드
