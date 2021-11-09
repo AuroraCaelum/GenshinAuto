@@ -39,7 +39,7 @@ public class WebViewActivity extends AppCompatActivity {
         webSettings.setDomStorageEnabled(true);
         webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new WebChromeClient());
-        webView.loadUrl("https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&lang=ko-kr");
+        webView.loadUrl(getString(R.string.hoyolab_url));
 
     }
 
@@ -54,7 +54,7 @@ public class WebViewActivity extends AppCompatActivity {
 
     public void autoToken (View v){
         try {
-            String cookieRaw = CookieManager.getInstance().getCookie("https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&lang=ko-kr") + ";";
+            String cookieRaw = CookieManager.getInstance().getCookie(getString(R.string.hoyolab_url)) + ";";
 
             String ltoken_target = "ltoken=";
             String ltuid_target = "ltuid=";
@@ -74,10 +74,10 @@ public class WebViewActivity extends AppCompatActivity {
             editor.putString("ltuid", ltuid);
             editor.apply();
 
-            Toast.makeText(this, "토큰이 정상적으로 등록되었습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.token_auto_complete), Toast.LENGTH_SHORT).show();
             finish();
         } catch (StringIndexOutOfBoundsException e){
-            Toast.makeText(this, "유효한 토큰이 발견되지 않았습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.token_auto_notfound), Toast.LENGTH_SHORT).show();
         }
 
     }

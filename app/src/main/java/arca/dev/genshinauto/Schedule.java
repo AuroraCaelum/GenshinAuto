@@ -50,7 +50,7 @@ public class Schedule extends BroadcastReceiver {
         RequestBody body = new FormBody.Builder()
                 .build();
         Request request = new Request.Builder()
-                .url("https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&lang=ko-kr")
+                .url(context.getString(R.string.hoyolab_api_url))
                 .addHeader("Cookie","ltuid=" + ltuid + ";ltoken=" + ltoken + ";")
                 .post(body)
                 .build();
@@ -72,8 +72,7 @@ public class Schedule extends BroadcastReceiver {
                             Boolean pushStatus = pref.getBoolean("pushStatus", true);
                             if (pushStatus) {
                                 if (msg.equals("OK")){
-                                    msg = "출석체크 완료!";
-                                    //Toast.makeText(MainActivity.this, "출석체크 완료!", Toast.LENGTH_SHORT).show();
+                                    msg = context.getString(R.string.checkin_complete);
                                 }
                                 pushSender(msg);
                             }
@@ -102,7 +101,7 @@ public class Schedule extends BroadcastReceiver {
                 .setTicker(msg)
                 .setWhen(System.currentTimeMillis())
                 .setNumber(1)
-                .setContentTitle("원신 자동출첵")
+                .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(msg)
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setContentIntent(pendingIntent)

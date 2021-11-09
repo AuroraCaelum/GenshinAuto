@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         RequestBody body = new FormBody.Builder()
                 .build();
         Request request = new Request.Builder()
-                .url(getString(R.string.hoyolab_url))
+                .url(getString(R.string.hoyolab_api_url))
                 .addHeader("Cookie", "ltuid=" + ltuid + ";ltoken=" + ltoken + ";") //ltuid 값과 ltoken 값을 포함한 쿠키 헤더 생성
                 .post(body)
                 .build(); //호요랩 서버에 POST
