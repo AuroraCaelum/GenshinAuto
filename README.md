@@ -73,3 +73,8 @@ Not logged in. (Failed to login, invalid token value)
 - 전체 로직 보기 - [app/src/main/java/arca/dev/genshinauto](https://github.com/dev-by-david/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
 
 ## 오류 관련
+
+***
+
+## Special Thanks to<br></br>
+Kim Yuhwan(Chemical, Inc. HR Manager)
