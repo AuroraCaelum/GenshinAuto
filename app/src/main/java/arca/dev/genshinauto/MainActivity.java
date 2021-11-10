@@ -22,6 +22,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -64,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
     public static PendingIntent sender = null;
     String updateUrl = "https://raw.githubusercontent.com/dev-by-david/GenshinAuto/main/app/version.txt";
     Handler handler = new Handler();
-    //final NotificationManager notificationManager;
-    //final Notification.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +172,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if (item.getItemId() == R.id.github) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dev-by-david/GenshinAuto/releases"));
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void manual(View v) throws IOException {

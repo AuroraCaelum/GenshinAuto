@@ -37,4 +37,6 @@
     <string name="update_pos">Update Now</string>
 
     <string name="checkin_complete">Check-In Completed!</string>
+
+    <string name="menu_github">Github Page</string>
 </resources>

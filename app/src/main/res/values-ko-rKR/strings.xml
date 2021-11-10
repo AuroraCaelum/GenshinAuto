@@ -30,4 +30,5 @@
     <string name="hoyolab_api_url">https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&amp;lang=ko-kr</string>
     <string name="token_auto_complete">토큰이 정상적으로 등록되었습니다.</string>
     <string name="token_auto_notfound">유효한 토큰이 발견되지 않았습니다.</string>
+    <string name="menu_github">Github 바로가기</string>
 </resources>
