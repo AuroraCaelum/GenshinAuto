@@ -1,6 +1,5 @@
 package arca.dev.genshinauto;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -10,7 +9,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +18,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -36,18 +36,11 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Scanner;
 import java.util.TimeZone;
 
 import okhttp3.Call;
@@ -57,7 +50,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
     public static final String NOTI_CHANNEL = "12321";
@@ -76,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
         //앱 내부 설정 저장소 등록
         pref = getSharedPreferences("pref", MODE_PRIVATE);
         editor = pref.edit();
+
+        if(!isIgnoringBatteryOptimizations(this)) {
+            Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        }
 
         //앱 업데이트 확인
         checkUpdate();
@@ -120,17 +118,24 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     //알람매니저 실행
-                    alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                    /*alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(getApplicationContext(), Schedule.class);
                     sender = PendingIntent.getBroadcast(getApplicationContext(), 12321, intent, 0);
-
 
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC")); //Asia/Seoul
                     calendar.setTimeInMillis(System.currentTimeMillis());
                     calendar.set(Calendar.HOUR_OF_DAY, 0);
                     calendar.set(Calendar.MINUTE, 0);
                     calendar.set(Calendar.SECOND, 30);
-                    alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
+
+                    if(Build.VERSION.SDK_INT >= 23){
+                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
+                    } else {
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
+                    }*/
+                    createAlarm(getApplicationContext());
+
+                    //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
                     Log.d("DEV", "onCheckedChanged: success");
                     Toast.makeText(MainActivity.this, getString(R.string.service_started), Toast.LENGTH_SHORT).show();
 
@@ -172,6 +177,34 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    static void createAlarm(Context context){
+        alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, Schedule.class);
+        sender = PendingIntent.getBroadcast(context, 12321, intent, 0);
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC")); //Asia/Seoul
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 30);
+
+        if(Build.VERSION.SDK_INT >= 23){
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
+        }
+        Log.d("DEV", "createAlarm: success");
+    }
+
+    static boolean isIgnoringBatteryOptimizations(Context context) {
+        PowerManager powerManager =
+                (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+        }
+        return true;
     }
 
     @Override

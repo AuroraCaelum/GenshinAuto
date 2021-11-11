@@ -86,6 +86,7 @@ public class Schedule extends BroadcastReceiver {
                 });
             }
         });
+        MainActivity.createAlarm(context.getApplicationContext());
     }
 
     public void pushSender(String msg){

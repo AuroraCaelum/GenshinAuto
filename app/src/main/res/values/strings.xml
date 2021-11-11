@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">GenshinAuto</string>
-    <string name="version" translatable="false">1.0.1</string>
+    <string name="version" translatable="false">1.0.1-Beta</string>
     <string name="hoyolab_api_url">https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&amp;lang=en-us</string>
     <string name="hoyolab_url">https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&amp;lang=en-us</string>
     <string name="btn1">Manual Check</string>
