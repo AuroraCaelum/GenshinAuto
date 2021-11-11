@@ -24,7 +24,7 @@
 아직 로그인하지 않았습니다. (토큰 오류로 로그인에 실패한 경우)
 ```
 3. 정상 작동이 확인되었다면 <b><자동출첵 사용></b> 버튼을 활성화해주세요. <b>서비스 작동 성공</b> 메시지가 뜨면 성공입니다.
-- 자동 출석체크는 중국 표준시 (GMT+8/PRC) 기준으로 00시 00분 30초에 작동합니다.
+- 자동 출석체크는 중국 표준시 (UTC+8/PRC) 기준으로 00시 00분 30초에 작동합니다.
 
 ## 민감한 정보 이용
 - 이 앱은 사용자의 개인정보 (토큰, UID 등)을 HoyoLab 이외 외부 서버로 전달하지 않습니다.
@@ -60,22 +60,23 @@ If the token values are invalid, you will got the following push message.
 ```
 Not logged in. (Failed to login, invalid token value)
 ```
-3. 정상 작동이 확인되었다면 <b><자동출첵 사용></b> 버튼을 활성화해주세요. <b>서비스 작동 성공</b> 메시지가 뜨면 성공입니다.
-- 자동 출석체크는 중국 표준시 (GMT+8/PRC) 기준으로 00시 00분 30초에 작동합니다.
+3. If manual check-in has successed, turn on the <b><Enable Service></b> button. Please check <b>Service started</b> message.
+- Automatic Check-In will activated in UTC+8/PRC 00:00:30.
 
-## 민감한 정보 이용
-- 이 앱은 사용자의 개인정보 (토큰, UID 등)을 HoyoLab 이외 외부 서버로 전달하지 않습니다.
-- 토큰과 UID를 이용한 모든 작업은 클라이언트(사용자의 기기)에서만 이루어집니다.
-- 사용자의 토큰은 앱에서만 접근할 수 있는 앱 내부 저장소에 안전하게 저장됩니다.
+## Use of sensitive data
+- This application never sends a personal datas like Token values, UID, etc. to external servers except HoyoLab.
+- Every function using Token and UID will work in client(user's devices).
+- User's token values are safely saved in internal storage which only local applications can access.
 
-### 토큰 데이터 처리 코드
-- [Schedule.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - 자동/수동 출석체크 관련 코드
-- [WebViewActivity.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - 토큰 자동등록 관련 코드
-- 전체 로직 보기 - [app/src/main/java/arca/dev/genshinauto](https://github.com/dev-by-david/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
+### Data processing codes
+- [Schedule.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - Automatic/Manual Check-In
+- [WebViewActivity.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - Token value parse
+- View all logics - [app/src/main/java/arca/dev/genshinauto](https://github.com/dev-by-david/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
 
-## 오류 관련
+## About issue
+- If you found some bugs, please post an issues.
 
-***
+<br></br>
 
 ## Special Thanks to<br>
 Kim Yuhwan (Code Review)<br>
