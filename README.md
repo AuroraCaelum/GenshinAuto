@@ -1,6 +1,5 @@
-- <a href="#korean" >한국어/Korean</a>
-- <a href="#english" >English/영어</a>  
-
+- <a href="#korean" >한국어/Korean</a> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <a href="#english" >English/영어</a>
+<br></br>
 - [다운로드 / Latest Release](https://github.com/dev-by-david/GenshinAuto/releases)
 
 ***
@@ -78,5 +77,6 @@ Not logged in. (Failed to login, invalid token value)
 
 ***
 
-## Special Thanks to<br></br>
-Kim Yuhwan(Chemical, Inc. HR Manager)
+## Special Thanks to<br>
+Kim Yuhwan (Code Review)<br>
+Kang Jiyoon &nbsp;|&nbsp; Ma Joyeong &nbsp;|&nbsp; Sean Kim (Test)
