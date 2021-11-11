@@ -1,6 +1,8 @@
 - <a href="#korean" >한국어/Korean</a>
 - <a href="#english" >English/영어</a>  
 
+- [다운로드 / Latest Release](https://github.com/dev-by-david/GenshinAuto/releases)
+
 ***
 
 <div id="korean"></div>
