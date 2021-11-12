@@ -30,20 +30,16 @@ public class BootReceiver extends BroadcastReceiver {
                 Intent intent_a = new Intent(context, Schedule.class);
                 sender = PendingIntent.getBroadcast(context, 12321, intent_a, 0);
 
-
-                //Date time = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2021-11-06 15:41:00");
-                //Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC"), Locale.CHINA);
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC"));
                 calendar.setTimeInMillis(System.currentTimeMillis());
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
                 calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 30);
+                calendar.set(Calendar.SECOND, 15);
                 if(Build.VERSION.SDK_INT >= 23){
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
                 } else {
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
                 }
-                //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
                 Log.d("DEV", "BootReceiver: success");
             }
         }

@@ -118,21 +118,6 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     //알람매니저 실행
-                    /*alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-                    Intent intent = new Intent(getApplicationContext(), Schedule.class);
-                    sender = PendingIntent.getBroadcast(getApplicationContext(), 12321, intent, 0);
-
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC")); //Asia/Seoul
-                    calendar.setTimeInMillis(System.currentTimeMillis());
-                    calendar.set(Calendar.HOUR_OF_DAY, 0);
-                    calendar.set(Calendar.MINUTE, 0);
-                    calendar.set(Calendar.SECOND, 30);
-
-                    if(Build.VERSION.SDK_INT >= 23){
-                        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
-                    } else {
-                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
-                    }*/
                     createAlarm(getApplicationContext());
 
                     //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
@@ -188,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 30);
+        calendar.set(Calendar.SECOND, 15);
 
         if(Build.VERSION.SDK_INT >= 23){
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);

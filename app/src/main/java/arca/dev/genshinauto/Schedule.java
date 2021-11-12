@@ -107,7 +107,6 @@ public class Schedule extends BroadcastReceiver {
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-                .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
