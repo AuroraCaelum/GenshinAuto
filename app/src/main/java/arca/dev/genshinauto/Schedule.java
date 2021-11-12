@@ -34,14 +34,11 @@ import static arca.dev.genshinauto.MainActivity.NOTI_CHANNEL;
 
 public class Schedule extends BroadcastReceiver {
     SharedPreferences pref;
-    SharedPreferences.Editor editor;
     private Context context;
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        Log.d("DEV", "onReceive: received");
         pref = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
-        editor = pref.edit();
 
         String ltuid = pref.getString("ltuid", "");
         String ltoken = pref.getString("ltoken", "");
