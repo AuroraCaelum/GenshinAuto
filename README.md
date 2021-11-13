@@ -81,3 +81,5 @@ Not logged in. (Failed to login, invalid token value)
 ## Special Thanks to<br>
 Kim Yuhwan (Code Review)<br>
 Kang Jiyoon &nbsp;|&nbsp; Ma Joyeong &nbsp;|&nbsp; Sean Kim (Test)
+
+![Download Count](https://img.shields.io/github/downloads/dev-by-david/GenshinAuto/total.svg)
