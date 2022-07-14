@@ -24,7 +24,7 @@
 아직 로그인하지 않았습니다. (토큰 오류로 로그인에 실패한 경우)
 ```
 3. 정상 작동이 확인되었다면 <b><자동출첵 사용></b> 버튼을 활성화해주세요. <b>서비스 작동 성공</b> 메시지가 뜨면 성공입니다.
-- 자동 출석체크는 중국 표준시 (UTC+8/PRC) 기준으로 00시 00분 30초에 작동합니다.
+- 자동 출석체크는 중국 표준시 (UTC+8/PRC) 기준으로 00시 00분 10초에 작동합니다.
 
 ## 민감한 정보 이용
 - 이 앱은 사용자의 개인정보 (토큰, UID 등)을 HoyoLab 이외 외부 서버로 전달하지 않습니다.
@@ -32,12 +32,21 @@
 - 사용자의 토큰은 앱에서만 접근할 수 있는 앱 내부 저장소에 안전하게 저장됩니다.
 
 ### 토큰 데이터 처리 코드
-- [Schedule.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - 자동/수동 출석체크 관련 코드
-- [WebViewActivity.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - 토큰 자동등록 관련 코드
-- 전체 로직 보기 - [app/src/main/java/arca/dev/genshinauto](https://github.com/dev-by-david/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
+- [Schedule.java](https://github.com/AuroraCaelum/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - 자동/수동 출석체크 관련 코드
+- [WebViewActivity.java](https://github.com/AuroraCaelum/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - 토큰 자동등록 관련 코드
+- 전체 로직 보기 - [app/src/main/java/arca/dev/genshinauto](https://github.com/AuroraCaelum/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
 
 ## 오류 관련
 - 급하게 만들어서 자잘한 오류가 있을 수 있습니다. 오류내역 이슈 보내주시면 개선하는데에 큰 도움이 됩니다.
+
+## FAQ
+>- 등록을 했는데 작동을 안해요.
+- 앱 구조상 등록한 다음날부터 작동이 시작됩니다. 만약 설정한 시간이 같은날이라면, 다음날 자동출첵이 실행되는지 다시 확인해주세요.
+- 위와 같은 경우가 아닐 경우, <b><자동출첵 사용></b> 버튼이 활성화 되어있지 않거나, 등록 오류가 발생했을 수 있습니다. <b><자동출첵 사용></b> 버튼을 껐다 켜 재등록 해 주세요.
+
+>- HoyoLab 비밀번호를 바꿨더니 연동이 풀렸어요. / 앱을 재설치했는데 토큰 자동입력 메시지가 뜨지 않아요.
+- 앱 데이터를 초기화하고 토큰 불러오기를 다시 시도해주세요.
+- \[설정\] -> \[애플리케이션\] -> \[원신 자동출석체크\] -> \[저장공간\] -> \[데이터 삭제\] 에서 데이터를 초기화할 수 있습니다.
 
 ***
 
@@ -69,9 +78,9 @@ Not logged in. (Failed to login, invalid token value)
 - User's token values are safely saved in internal storage which only local applications can access.
 
 ### Data processing codes
-- [Schedule.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - Automatic/Manual Check-In
-- [WebViewActivity.java](https://github.com/dev-by-david/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - Token value parse
-- View all logics - [app/src/main/java/arca/dev/genshinauto](https://github.com/dev-by-david/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
+- [Schedule.java](https://github.com/AuroraCaelum/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/Schedule.java) - Automatic/Manual Check-In
+- [WebViewActivity.java](https://github.com/AuroraCaelum/GenshinAuto/blob/main/app/src/main/java/arca/dev/genshinauto/WebViewActivity.java) - Token value parse
+- View all logics - [app/src/main/java/arca/dev/genshinauto](https://github.com/AuroraCaelum/GenshinAuto/tree/main/app/src/main/java/arca/dev/genshinauto)
 
 ## About issue
 - If you found some bugs, please post an issues.
@@ -82,4 +91,4 @@ Not logged in. (Failed to login, invalid token value)
 Kim Yuhwan (Code Review)<br>
 Kang Jiyoon &nbsp;|&nbsp; Ma Joyeong &nbsp;|&nbsp; Sean Kim (Test)
 
-![Download Count](https://img.shields.io/github/downloads/dev-by-david/GenshinAuto/total.svg)
+![Download Count](https://img.shields.io/github/downloads/AuroraCaelum/GenshinAuto/total.svg)

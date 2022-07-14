@@ -40,6 +40,9 @@ public class Schedule extends BroadcastReceiver {
         this.context = context;
         pref = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
 
+        int hour = pref.getInt("hour", 0);
+        int min = pref.getInt("min", 0);
+
         String ltuid = pref.getString("ltuid", "");
         String ltoken = pref.getString("ltoken", "");
 
@@ -83,7 +86,7 @@ public class Schedule extends BroadcastReceiver {
                 });
             }
         });
-        MainActivity.createAlarm(context.getApplicationContext());
+        MainActivity.createAlarm(context.getApplicationContext(), hour, min);
     }
 
     public void pushSender(String msg){

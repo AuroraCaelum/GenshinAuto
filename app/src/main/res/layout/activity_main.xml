@@ -13,6 +13,7 @@
         android:layout_centerVertical="true"
         android:orientation="vertical"
         android:gravity="center">
+
         <Button
             android:id="@+id/manual"
             android:layout_width="wrap_content"
@@ -26,6 +27,13 @@
             android:text="@string/btn3"
             android:onClick="manualToken"/>
 
+         <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/input_time"
+            android:onClick="timeChange"/>
+
         <Switch
             android:id="@+id/serviceSwitch"
             android:layout_width="wrap_content"
@@ -38,4 +46,5 @@
             android:layout_height="wrap_content"
             android:text="@string/push" />
     </LinearLayout>
+
 </RelativeLayout>

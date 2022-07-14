@@ -9,6 +9,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -59,11 +61,13 @@ public class MainActivity extends AppCompatActivity {
     public static PendingIntent sender = null;
     String updateUrl = "https://raw.githubusercontent.com/dev-by-david/GenshinAuto/main/app/version.txt";
     Handler handler = new Handler();
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.InitializeListener();
 
         //앱 내부 설정 저장소 등록
         pref = getSharedPreferences("pref", MODE_PRIVATE);
@@ -118,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     //알람매니저 실행
-                    createAlarm(getApplicationContext());
+                    int hour = pref.getInt("hour", 0);
+                    int min = pref.getInt("min", 0);
+                    createAlarm(getApplicationContext(), hour, min);
 
                     //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+AlarmManager.INTERVAL_DAY, AlarmManager.INTERVAL_DAY, sender);
                     Log.d("DEV", "onCheckedChanged: success");
@@ -164,16 +170,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    static void createAlarm(Context context){
+    static void createAlarm(Context context, int hour, int min){
         alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Schedule.class);
         sender = PendingIntent.getBroadcast(context, 12321, intent, 0);
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("PRC")); //Asia/Seoul
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 15);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, 10);
 
         if(Build.VERSION.SDK_INT >= 23){
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + AlarmManager.INTERVAL_DAY, sender);
@@ -201,11 +207,60 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        if (item.getItemId() == R.id.github) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dev-by-david/GenshinAuto/"));
-            startActivity(intent);
+        switch (item.getItemId()) {
+            case (R.id.github):
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AuroraCaelum/GenshinAuto/"));
+                startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void InitializeListener(){
+        onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                editor.putInt("hour", hourOfDay);
+                editor.putInt("min", minute);
+                editor.apply();
+
+                //서비스 재시작
+                boolean status = pref.getBoolean("serviceStatus", false);
+                if (!status) {
+                    Log.d("DEV", "Time changed");
+                } else {
+                    alarmManager = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                    Intent intent = new Intent(getApplicationContext(), Schedule.class);
+                    sender = PendingIntent.getBroadcast(getApplicationContext(),12321, intent, 0);
+                    alarmManager.cancel(sender);
+                    sender.cancel();
+                    alarmManager = null;
+                    sender = null;
+                    Log.d("DEV", "onCheckedChanged: canceled" );
+
+                    createAlarm(getApplicationContext(), hourOfDay, minute);
+                    Log.d("DEV", "onCheckedChanged: success");
+                    Toast.makeText(MainActivity.this, R.string.toast_restart, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
+    public void timeChange(View v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.PRC_title))
+                .setMessage(getString(R.string.PRC_body))
+                .setPositiveButton(getString(R.string.continue_btn), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int hour = pref.getInt("hour", 0);
+                        int min = pref.getInt("min", 0);
+                        TimePickerDialog dialog = new TimePickerDialog(MainActivity.this, onTimeSetListener, hour, min, true);
+                        dialog.show();
+                        dialogInterface.dismiss();
+                    }
+                });
+        builder.show();
     }
 
     public void manual(View v) throws IOException {
@@ -384,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
                                         .setPositiveButton(getString(R.string.update_pos), new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/dev-by-david/GenshinAuto/releases"));
+                                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AuroraCaelum/GenshinAuto/releases/latest"));
                                                 startActivity(intent);
                                                 dialogInterface.dismiss();
                                             }

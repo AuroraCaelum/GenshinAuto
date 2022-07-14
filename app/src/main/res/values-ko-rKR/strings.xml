@@ -31,4 +31,10 @@
     <string name="token_auto_complete">토큰이 정상적으로 등록되었습니다.</string>
     <string name="token_auto_notfound">유효한 토큰이 발견되지 않았습니다.</string>
     <string name="menu_github">Github 바로가기</string>
+    <string name="menu_language">한국어 / English</string>
+    <string name="input_time">반복 작동시간 변경</string>
+    <string name="toast_restart">시간이 변경되었습니다. [자동출첵 사용] 버튼을 껐다 켜서 서비스를 재시작 해주세요.</string>
+    <string name="PRC_title">실행 전 확인!</string>
+    <string name="PRC_body">중국표준시 (PRC / UTC+08:00) 기준으로 입력해주세요!\n한국 시간 기준으로 한 시간 빠르게 설정해주시면 됩니다.</string>
+    <string name="continue_btn">계속</string>
 </resources>

@@ -18,6 +18,8 @@
     <string name="toast_manual">Click [Manual Token Input] button to input values</string>
     <string name="input_manual">Manual Input</string>
     <string name="input_auto">Auto Input</string>
+    <string name="input_time">Change Repeating Time</string>
+    <string name="toast_restart">Time changed. Please restart the service.\n(Turn off and on again the [Enable Service] button)</string>
 
     <string name="service_started">Service Started</string>
     <string name="service_stopped">Service Stopped</string>
@@ -26,11 +28,15 @@
 
     <string name="input">Input</string>
     <string name="cancel">Cancel</string>
+    <string name="continue_btn">Continue</string>
 
     <string name="input_uid">Input UID</string>
     <string name="input_uid_dialog">Input ltuid value.</string>
     <string name="input_token">Input Token</string>
     <string name="input_token_dialog">Input ltoken value.</string>
+
+    <string name="PRC_title">Please Read!</string>
+    <string name="PRC_body">Please input a "PRC (UTC+08:00)" time.</string>
 
     <string name="update">Update Alert</string>
     <string name="update_dialog">New version is available. Update now?</string>
@@ -39,4 +45,5 @@
     <string name="checkin_complete">Check-In Completed!</string>
 
     <string name="menu_github">Github Page</string>
+    <string name="menu_language">English / 한국어</string>
 </resources>
