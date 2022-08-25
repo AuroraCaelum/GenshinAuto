@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     public static AlarmManager alarmManager = null;
     public static PendingIntent sender = null;
-    String updateUrl = "https://raw.githubusercontent.com/dev-by-david/GenshinAuto/main/app/version.txt";
+    String updateUrl = "https://raw.githubusercontent.com/AuroraCaelum/GenshinAuto/main/app/version.txt";
     Handler handler = new Handler();
     private TimePickerDialog.OnTimeSetListener onTimeSetListener;
 
@@ -431,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (!currentVersion.equals(stringBuffer.toString())){
+                            if (!(currentVersion.equals(stringBuffer.toString()))){ //TODO strings.xml에 currentVersion 업데이트 했는지?
                                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                                 builder.setTitle(getString(R.string.update))
                                         .setMessage(getString(R.string.update_dialog))

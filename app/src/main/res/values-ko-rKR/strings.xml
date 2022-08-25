@@ -25,7 +25,7 @@
     <string name="update_dialog">신규 버전이 있습니다. 지금 업데이트 하시겠습니까?</string>
     <string name="update">업데이트 알림</string>
     <string name="update_pos">지금 업데이트</string>
-    <string name="hoyolab_url">https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&amp;lang=ko-kr</string>
+    <string name="hoyolab_url">https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e202102251931481&amp;lang=ko-kr</string>
     <string name="checkin_complete">출석체크 완료!</string>
     <string name="hoyolab_api_url">https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&amp;lang=ko-kr</string>
     <string name="token_auto_complete">토큰이 정상적으로 등록되었습니다.</string>

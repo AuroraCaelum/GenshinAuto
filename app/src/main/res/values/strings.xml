@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">GenshinAuto</string>
-    <string name="version" translatable="false">1.1.0</string>
+    <string name="version" translatable="false">1.3.0</string>
     <string name="hoyolab_api_url">https://hk4e-api-os.mihoyo.com/event/sol/sign?act_id=e202102251931481&amp;lang=en-us</string>
-    <string name="hoyolab_url">https://webstatic-sea.mihoyo.com/ys/event/signin-sea/index.html?act_id=e202102251931481&amp;lang=en-us</string>
+    <string name="hoyolab_url">https://act.hoyolab.com/ys/event/signin-sea-v3/index.html?act_id=e202102251931481&amp;lang=en-us</string>
     <string name="btn1">Manual Check</string>
     <string name="btn2">HoyoLab Page Open</string>
     <string name="btn3">Manual Token Input</string>
