@@ -1,3 +1,5 @@
+![Download Count](https://img.shields.io/github/downloads/AuroraCaelum/GenshinAuto/total.svg)
+
 - <a href="#korean" >한국어/Korean</a> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <a href="#english" >English/영어</a>
 <br></br>
 - [다운로드 / Latest Release](https://github.com/dev-by-david/GenshinAuto/releases)
@@ -90,5 +92,3 @@ Not logged in. (Failed to login, invalid token value)
 ## Special Thanks to<br>
 Kim Yuhwan (Code Review)<br>
 Kang Jiyoon &nbsp;|&nbsp; Ma Joyeong &nbsp;|&nbsp; Sean Kim (Test)
-
-![Download Count](https://img.shields.io/github/downloads/AuroraCaelum/GenshinAuto/total.svg)
