@@ -13,3 +13,6 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 .idea/libraries/Gradle__androidx_activity_activity_1_2_4_aar.xml
+.DS_Store
+app/.DS_Store
+app/.DS_Store
