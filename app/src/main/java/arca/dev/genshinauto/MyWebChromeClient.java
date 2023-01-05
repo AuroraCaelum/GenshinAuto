@@ -17,6 +17,7 @@ public class MyWebChromeClient extends WebChromeClient {
         WebView mWebView = new WebView(view.getContext());
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setUserAgentString("Mozilla/5.0 AppleWebKit/535.19 Chrome/56.0.0 Mobile Safari/535.19");
 
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(mWebView);

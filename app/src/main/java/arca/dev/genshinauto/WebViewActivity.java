@@ -45,7 +45,7 @@ public class WebViewActivity extends AppCompatActivity {
         webSettings.setSupportMultipleWindows(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webSettings.setDomStorageEnabled(true);
-        //webSettings.setUserAgentString("Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.71 Mobile Safari/537.36");
+        webSettings.setUserAgentString("Mozilla/5.0 AppleWebKit/535.19 Chrome/56.0.0 Mobile Safari/535.19");
         //webView.setWebViewClient(new WebViewClient());
         webView.setWebChromeClient(new MyWebChromeClient());
         webView.loadUrl(getString(R.string.hoyolab_url));
