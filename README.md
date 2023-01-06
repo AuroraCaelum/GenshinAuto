@@ -50,6 +50,9 @@
 - 앱 데이터를 초기화하고 토큰 불러오기를 다시 시도해주세요.
 - \[설정\] -> \[애플리케이션\] -> \[원신 자동출석체크\] -> \[저장공간\] -> \[데이터 삭제\] 에서 데이터를 초기화할 수 있습니다.
 
+>- 소셜 로그인 (Google, Apple ID, Facebook, Twitter)이 작동하지 않아요.
+- 해당 문제는 v4.1.2 에서 패치되었습니다. 4.1.2 이후 버전을 이용해주세요.
+
 ***
 
 <div id="english"></div>
@@ -86,6 +89,18 @@ Not logged in. (Failed to login, invalid token value)
 
 ## About issue
 - If you found some bugs, please post an issues.
+
+## FAQ
+>- I enabled the service, but it doesn't works.
+- Due to the structure of the app, the operation starts the day after enabling. If the set time is the same day, please check again if the automatic attendance check is executed the next day.
+- Otherwise, the <b><Enable Service></b> button may not be activated or a registration error may have occurred. Please re-register by turning off and turning off the <b><Enable Service></b> button.
+
+>- I changed the HoyoLab password and the account is unlinked. / I reinstalled the app, but the token auto input message does not appear.
+- Please clear the app data and try to load the token again.
+- You can clear the data in \[Settings\] -> \[Apps\] -> \[GenshinAuto\] -> \[Storage\] -> \[Clear data\]
+
+>- Social Login (Google, Apple ID, Facebook, Twitter) doesn't works.
+- The problem is patched on v4.1.2. Please use the latest version (>4.1.2).
 
 <br></br>
 
